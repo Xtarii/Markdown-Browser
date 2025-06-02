@@ -85,7 +85,7 @@ MDTPObject Network::fetch(const char* host, const int port, const char* command)
     }catch(MDTP::NetworkException& exception) { // Add Error Message when the exception makes base public
         std::string full;
         if(std::string content; Browser::Document::DocumentManager::loadFile("res/pages/error/FailedToLoad.md", content))
-            full += content + "\r\n\r\n\r\n";
+            full += content + "\r\n\r\n";
         full += "### Error Message\r\n" + std::string(exception.what());
 
         return {

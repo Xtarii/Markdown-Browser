@@ -89,7 +89,6 @@ Browser::Document::Parser::Node Browser::Document::Parser::newLine(int* x, const
         c = &document[*x];
         if(*c != '\r' && *c != '\n') break;
 
-
         if(*c == '\n') lines++;
         value += *c;
         (*x)++;

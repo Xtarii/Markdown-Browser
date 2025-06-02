@@ -26,6 +26,9 @@ void Browser::Document::Renderer::render(const HDC* context) {
 
 
 void Browser::Document::Renderer::title(const HDC* context, const Parser::Node* node) {
+    RECT window; // Window Reference
+    GetWindowRect(WindowFromDC(*context), &window);
+
     Style::Fonts::Font font = Style::Fonts::Font(BASE_TITLE_HEIGHT - (node->intValue * TITLE_SIZE_DIFFERENCE));
     SelectObject(*context, font.object);
     for(const Parser::Node& sub : node->tree) {
@@ -33,10 +36,18 @@ void Browser::Document::Renderer::title(const HDC* context, const Parser::Node* 
             case Parser::SPACE:
                 x += sub.intValue * SPACE_WIDTH;
                 break;
-            case Parser::NEWLINE:
+            case Parser::NEWLINE: { // Draws Title Line Under Title before new lines
                 y += font.height + LINE_SPACE;
+                const RECT line{
+                    .left = X_START, .top = y,
+                    .right = ((TITLE_LINE_WIDTH_ADDER + 1) * (window.right - window.left)) / (TITLE_LINE_WIDTH_ADDER * TITLE_LINE_WIDTH),
+                    .bottom = y + LINE_SPACE,
+                };
+                FillRect(*context, &line, reinterpret_cast<HBRUSH>((COLOR_WINDOW - 1)));
+                y += sub.intValue * BASE_TEXT_HEIGHT;
                 x = X_START;
                 break;
+            }
             case Parser::WORD: {
                 TextOut(*context, x, y, sub.value.c_str(), static_cast<int>(sub.value.length()));
 
@@ -52,23 +63,6 @@ void Browser::Document::Renderer::title(const HDC* context, const Parser::Node* 
                 break;
         }
     }
-
-
-    // Window Reference
-    RECT window;
-    GetWindowRect(WindowFromDC(*context), &window);
-
-
-    // Draw Linje
-    const RECT line{
-        .left = X_START,
-        .top = y,
-
-        .right = ((TITLE_LINE_WIDTH_ADDER + 1) * (window.right - window.left)) / (TITLE_LINE_WIDTH_ADDER * TITLE_LINE_WIDTH),
-        .bottom = y + LINE_SPACE,
-    };
-    FillRect(*context, &line, reinterpret_cast<HBRUSH>((COLOR_WINDOW - 1)));
-    y += font.height / 2 + LINE_SPACE;
 }
 
 void Browser::Document::Renderer::paragraph(const HDC* context, const Parser::Node* node) {
@@ -79,7 +73,7 @@ void Browser::Document::Renderer::paragraph(const HDC* context, const Parser::No
                 x += sub.intValue * SPACE_WIDTH;
                 break;
             case Parser::NEWLINE:
-                y += Style::Fonts::Paragraph.height + LINE_SPACE;
+                y += Style::Fonts::Paragraph.height + (LINE_SPACE * (sub.intValue - 1) * BASE_TEXT_HEIGHT);
                 x = X_START;
                 break;
             case Parser::WORD: {
@@ -118,7 +112,7 @@ void Browser::Document::Renderer::list(const HDC* context, const Parser::Node* n
                 x += sub.intValue * SPACE_WIDTH;
                 break;
             case Parser::NEWLINE:
-                y += Style::Fonts::Paragraph.height + LINE_SPACE;
+                y += Style::Fonts::Paragraph.height + (LINE_SPACE * (sub.intValue - 1) * BASE_TEXT_HEIGHT);
                 x = X_START;
                 break;
 

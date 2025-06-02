@@ -18,7 +18,7 @@
 /**
  * Line Space
  */
-#define LINE_SPACE 1
+#define LINE_SPACE 2
 
 /**
  * The Procent of the Window Width that the titles line with will fill
