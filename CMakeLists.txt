@@ -11,7 +11,7 @@ include(FetchContent)
 FetchContent_Declare(
         MDTP
         GIT_REPOSITORY https://github.com/Xtarii/MDTP.git
-        GIT_TAG v1.1
+        GIT_TAG v1.2
 )
 FetchContent_MakeAvailable(MDTP)
 

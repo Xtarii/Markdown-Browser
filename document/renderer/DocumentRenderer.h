@@ -21,6 +21,16 @@
 #define LINE_SPACE 1
 
 /**
+ * The Procent of the Window Width that the titles line with will fill
+ */
+#define TITLE_LINE_WIDTH 2
+
+/**
+ * Magic Number : HELP THIS IS OUT OF CONTROL
+ */
+#define TITLE_LINE_WIDTH_ADDER 5
+
+/**
  * Y Position Start
  */
 #define Y_START 50
@@ -80,6 +90,16 @@ namespace Browser::Document {
              * @param node Title Node
              */
             void title(const HDC* context, const Parser::Node* node);
+
+
+
+            /**
+             * Renders List Node
+             *
+             * @param context Application Context
+             * @param node List Node
+             */
+            void list(const HDC* context, const Parser::Node* node);
 
 
 

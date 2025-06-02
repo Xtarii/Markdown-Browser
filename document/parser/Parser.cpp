@@ -31,6 +31,16 @@ std::vector<Browser::Document::Parser::Node> Browser::Document::Parser::parseTre
                 }
             }
 
+            case '-': {
+                if(node.type == NO_VALUE) {
+                    const Node t = list(&x, &c, document);
+                    node.type = t.type;
+                    node.value = t.value;
+                    node.intValue = t.intValue;
+                    break;
+                }
+            }
+
 
 
             default: // Parse Word
@@ -108,6 +118,20 @@ Browser::Document::Parser::Node Browser::Document::Parser::title(int* x, const c
     node.value = value;
     node.intValue = size;
     return node; // Returns Title
+}
+
+
+
+Browser::Document::Parser::Node Browser::Document::Parser::list(int* x, const char* c, const std::string& document) {
+    Node node{ .type = LIST, .value = "-" };
+    node.intValue = static_cast<int>(node.value.length());
+
+    if(document[(*x)++] == '-') {
+        return node;
+    }
+
+    node.type = PARAGRAPH; // Normal Paragraph Detected
+    return node;
 }
 
 

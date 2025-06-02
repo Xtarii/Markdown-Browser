@@ -59,6 +59,18 @@ namespace Browser::Document::Parser {
 
 
 
+    /**
+     * Parse List Node
+     *
+     * @param x Index Position in Document
+     * @param c Current Character
+     * @param document Base Document
+     * @return List Node
+     */
+    Node list(int* x, const char* c, const std::string& document);
+
+
+
 
 
     /**

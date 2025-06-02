@@ -21,18 +21,28 @@ bool Browser::Document::DocumentManager::loadDocument(const char* document) {
 
 
 bool Browser::Document::DocumentManager::loadDocument(const std::string& path) {
-    std::ifstream file = std::ifstream(path);
-    if(!file.is_open()) {
+    std::string content;
+    if(!loadFile(path, content)) {
         const char* document = "# Error\r\nCould not find " + *path.c_str();
         loadDocument(document);
         return false;
     }
+    return loadDocument(_strdup(content.c_str()));
+}
 
-    std::string full;
+
+
+
+
+bool Browser::Document::DocumentManager::loadFile(const std::string& path, std::string& out) {
+    std::ifstream file = std::ifstream(path);
+    if(!file.is_open()) return false;
+
+    out.clear(); // Clears old data
     std::string line;
     while(std::getline(file, line)) {
-        full += "\r\n" + line;
+        out += line + "\r\n";
     }
     file.close();
-    return loadDocument(_strdup(full.c_str()));
+    return true;
 }

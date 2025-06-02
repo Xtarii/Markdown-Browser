@@ -57,6 +57,19 @@ namespace Browser::Document {
 
 
 
+
+
+            /**
+             * Loads File from path
+             *
+             * @param path File Path
+             * @param out File Content
+             * @return Load Status
+             */
+            static bool loadFile(const std::string& path, std::string& out);
+
+
+
     } inline DocsManager;
 }
 

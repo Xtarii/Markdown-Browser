@@ -22,7 +22,7 @@ bool Browser::Window::registerClass(const HINSTANCE instance, const WNDPROC proc
     windowSpecs.hbrBackground  = background; // Window Background Color
     windowSpecs.lpszMenuName   = nullptr;
     windowSpecs.lpszClassName  = winClass; // Window Class Name
-    windowSpecs.hIconSm        = LoadIcon(windowSpecs.hInstance, IDI_APPLICATION);
+    windowSpecs.hIconSm        = loadIcon(windowSpecs.hInstance);
 
 
 

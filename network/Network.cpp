@@ -2,6 +2,8 @@
 
 #include <MDTP/socket/MDTPClient.h>
 
+#include "../document/manager/DocumentManager.h"
+
 
 Network::Query Network::parseQuery(const std::string& query) {
     Query data{};
@@ -80,11 +82,15 @@ MDTPObject Network::fetch(const char* host, const int port, const char* command)
     try {
         MDTPClient client(host, port);
         return client.fetch(command);
-    }catch(MDTP::NetworkException exception) {
-        const std::string error = "# Error\r\n Error fetching data";
+    }catch(MDTP::NetworkException& exception) { // Add Error Message when the exception makes base public
+        std::string full;
+        if(std::string content; Browser::Document::DocumentManager::loadFile("res/pages/error/FailedToLoad.md", content))
+            full += content + "\r\n\r\n\r\n";
+        full += "### Error Message\r\n" + std::string(exception.what());
+
         return {
-            .header = MDTPHeader{MDTP_VERSION, static_cast<unsigned short>(error.length()), STATUS_FAIL},
-            .body = error
+            .header = MDTPHeader{MDTP_VERSION, static_cast<unsigned short>(full.length()), STATUS_FAIL},
+            .body = full
         };
     }
 }

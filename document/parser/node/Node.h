@@ -19,6 +19,11 @@ namespace Browser::Document::Parser {
         NO_VALUE,
 
         /**
+         * List Node
+         */
+        LIST,
+
+        /**
          * Title Node
          *
          * Single line node with big text
