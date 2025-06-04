@@ -24,6 +24,13 @@ namespace Browser::Document::Parser {
         LIST,
 
         /**
+         * Star Node ( * )
+         *
+         * Marks special font styles
+         */
+        STAR,
+
+        /**
          * Title Node
          *
          * Single line node with big text

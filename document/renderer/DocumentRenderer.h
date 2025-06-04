@@ -48,6 +48,11 @@ namespace Browser::Document {
     struct Renderer {
         private:
             /**
+             * Basic Font Styles
+             */
+            bool bold = false, italic = false;
+
+            /**
              * Render Position
              */
             int x = 0, y = 0;

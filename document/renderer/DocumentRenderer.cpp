@@ -10,6 +10,7 @@ void Browser::Document::Renderer::resetPosition() {
 }
 
 
+
 void Browser::Document::Renderer::render(const HDC* context) {
     resetPosition(); // Resets Position before rendering
     std::vector<Parser::Node> tree = DocsManager.getDocument();
@@ -29,7 +30,10 @@ void Browser::Document::Renderer::title(const HDC* context, const Parser::Node* 
     RECT window; // Window Reference
     GetWindowRect(WindowFromDC(*context), &window);
 
-    Style::Fonts::Font font = Style::Fonts::Font(BASE_TITLE_HEIGHT - (node->intValue * TITLE_SIZE_DIFFERENCE));
+    Style::Fonts::Font font = Style::Fonts::Font(
+        BASE_TITLE_HEIGHT - (node->intValue * TITLE_SIZE_DIFFERENCE),
+        false, false, false, FW_HEAVY, "Segoe UI"
+    );
     SelectObject(*context, font.object);
     for(const Parser::Node& sub : node->tree) {
         switch(sub.type) {
@@ -48,6 +52,10 @@ void Browser::Document::Renderer::title(const HDC* context, const Parser::Node* 
                 x = X_START;
                 break;
             }
+
+            // Prints Title
+            case Parser::LIST:
+            case Parser::STAR:
             case Parser::WORD: {
                 TextOut(*context, x, y, sub.value.c_str(), static_cast<int>(sub.value.length()));
 
@@ -63,25 +71,45 @@ void Browser::Document::Renderer::title(const HDC* context, const Parser::Node* 
                 break;
         }
     }
+    bold = false; italic = false;
 }
 
 void Browser::Document::Renderer::paragraph(const HDC* context, const Parser::Node* node) {
-    SelectObject(*context, Style::Fonts::Paragraph.object);
     for(const Parser::Node& sub : node->tree) {
+        Style::Fonts::Font font = Style::Fonts::Font(
+            BASE_TEXT_HEIGHT,
+            false, italic, false, bold ? FW_BOLD : FW_NORMAL,
+            (bold || italic) ? "Arial" : "Segoe UI"
+        );
+        SelectObject(*context, font.object);
+
+
+
         switch(sub.type) {
             case Parser::SPACE:
                 x += sub.intValue * SPACE_WIDTH;
                 break;
             case Parser::NEWLINE:
-                y += Style::Fonts::Paragraph.height + (LINE_SPACE * (sub.intValue - 1) * BASE_TEXT_HEIGHT);
+                y += BASE_TEXT_HEIGHT + (LINE_SPACE * (sub.intValue - 1) * BASE_TEXT_HEIGHT);
                 x = X_START;
                 break;
+
+            case Parser::LIST:
+            case Parser::TITLE:
             case Parser::WORD: {
                 TextOut(*context, x, y, sub.value.c_str(), static_cast<int>(sub.value.length()));
 
                 SIZE size;
                 GetTextExtentPoint32A(*context, sub.value.c_str(), static_cast<int>(sub.value.length()), &size);
                 x += size.cx;
+                break;
+            }
+
+
+
+            case Parser::STAR: {
+                if(sub.intValue == 1) italic = !italic;
+                if(sub.intValue == 2) bold = !bold;
                 break;
             }
 
@@ -97,25 +125,41 @@ void Browser::Document::Renderer::paragraph(const HDC* context, const Parser::No
 }
 
 void Browser::Document::Renderer::list(const HDC* context, const Parser::Node* node) {
-    SelectObject(*context, Style::Fonts::Paragraph.object);
     x = X_START + TAB_WIDTH * SPACE_WIDTH;
 
+    Style::Fonts::Font startFont = Style::Fonts::Font(
+        BASE_TEXT_HEIGHT,
+        false, italic, false, bold ? FW_BOLD : FW_NORMAL,
+        (bold || italic) ? "Arial" : "Segoe UI"
+    );
+    SelectObject(*context, startFont.object);
+
     // List sign
-    const int line = y + Style::Fonts::Paragraph.height / 2;
-    Ellipse(*context, x - 5, line - 5, x + 5, line + 5);
-    x += 7;
+    const int line = y + BASE_TEXT_HEIGHT / 2;
+    Ellipse(*context, x - 3, line - 3, x + 3, line + 3);
+    x += 5;
 
     // List content
     for(const Parser::Node& sub : node->tree) {
+        Style::Fonts::Font font = Style::Fonts::Font(
+            BASE_TEXT_HEIGHT,
+            false, italic, false, bold ? FW_BOLD : FW_NORMAL,
+            (bold || italic) ? "Arial" : "Segoe UI"
+        );
+        SelectObject(*context, font.object);
+
+
+
         switch(sub.type) {
             case Parser::SPACE:
                 x += sub.intValue * SPACE_WIDTH;
                 break;
             case Parser::NEWLINE:
-                y += Style::Fonts::Paragraph.height + (LINE_SPACE * (sub.intValue - 1) * BASE_TEXT_HEIGHT);
+                y += font.height + (LINE_SPACE * (sub.intValue - 1) * BASE_TEXT_HEIGHT);
                 x = X_START;
                 break;
 
+            case Parser::TITLE:
             case Parser::WORD: {
                 TextOut(*context, x, y, sub.value.c_str(), static_cast<int>(sub.value.length()));
 
@@ -125,6 +169,13 @@ void Browser::Document::Renderer::list(const HDC* context, const Parser::Node* n
                 break;
             }
 
+
+
+            case Parser::STAR: {
+                if(sub.intValue == 1) italic = !italic;
+                if(sub.intValue == 2) bold = !bold;
+                break;
+            }
 
 
 

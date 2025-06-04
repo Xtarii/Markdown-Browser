@@ -42,6 +42,11 @@ std::vector<Browser::Document::Parser::Node> Browser::Document::Parser::parseTre
             }
 
 
+            case '*':
+                node.tree.push_back(star(&x, &c, document));
+                break;
+
+
 
             default: // Parse Word
                 node.tree.push_back(word(&x, &c, document));
@@ -109,7 +114,7 @@ Browser::Document::Parser::Node Browser::Document::Parser::title(int* x, const c
         if(*c != '#') break;
         if(size >= 6) break; // Can't go over Six in length technically
 
-        value += c;
+        value += *c;
         size++;
         (*x)++;
     }while(*x < document.length());
@@ -117,6 +122,26 @@ Browser::Document::Parser::Node Browser::Document::Parser::title(int* x, const c
     node.value = value;
     node.intValue = size;
     return node; // Returns Title
+}
+
+Browser::Document::Parser::Node Browser::Document::Parser::star(int* x, const char* c, const std::string& document) {
+    Node node{ .type = STAR };
+    int size = 0;
+    std::string value;
+
+    do {
+        c = &document[*x];
+        if(*c != '*') break;
+        if(size >= 2) break; // Can't go over 2 "*" in length
+
+        value += *c;
+        size++;
+        (*x)++;
+    }while(*x < document.length());
+
+    node.value = value;
+    node.intValue = size;
+    return node;
 }
 
 

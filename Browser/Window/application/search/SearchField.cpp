@@ -48,5 +48,10 @@ void Browser::WindowUI::SearchField::search(const std::string& query) {
     );
 
     // Loads Document
+    std::cout << "Fetched Data: "
+        << ((object.header.command.operation == STATUS_OK) ? "\033[38;5;10m" : "\033[38;5;9m")
+        << object.header.toString()
+        << "\033[0m"
+        << std::endl;
     Document::DocsManager.loadDocument(object.body.c_str());
 }

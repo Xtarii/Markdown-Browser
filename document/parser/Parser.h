@@ -69,6 +69,19 @@ namespace Browser::Document::Parser {
      */
     Node list(int* x, const char* c, const std::string& document);
 
+    /**
+     * Parse Star Node
+     *
+     * The star character is used to make **bold** and
+     * **italic** text.
+     *
+     * @param x Index Position in Document
+     * @param c Current Character
+     * @param document Base Document
+     * @return Star Node
+     */
+    Node star(int* x, const char* c, const std::string& document);
+
 
 
 
@@ -83,7 +96,8 @@ namespace Browser::Document::Parser {
     inline bool isSpecialCharacter(const char c) {
         return
             c == '\n' || c == '\r' || // New Line Markers
-            c == ' ' || c == '\t'; // Space Markers
+            c == ' ' || c == '\t'  || // Space Markers
+            c == '*'; // Other Special Characters
     }
 }
 

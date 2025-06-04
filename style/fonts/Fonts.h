@@ -48,12 +48,7 @@ namespace Browser::Style::Fonts {
          * @param weight Font Weight
          * @param fontFamily Font Family
          */
-        explicit Font(
-            int height,
-            DWORD underline = false, DWORD italic = false, DWORD strikeOut = false,
-            int weight = FW_DONTCARE,
-            LPCSTR fontFamily = "Segoe UI"
-        );
+        explicit Font(int height, DWORD underline, DWORD italic, DWORD strikeOut, int weight, LPCSTR fontFamily);
 
         /// Font Cleanup
         ~Font();
@@ -64,12 +59,12 @@ namespace Browser::Style::Fonts {
     /**
      * Title Font
      */
-    inline Font Title = Font(BASE_TITLE_HEIGHT);
+    extern Font Title;
 
     /**
      * Paragraph Font
      */
-    inline Font Paragraph = Font(BASE_TEXT_HEIGHT);
+    extern Font Paragraph;
 }
 
 #endif //FONTS_H

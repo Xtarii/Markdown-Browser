@@ -1,3 +1,4 @@
+#include <iostream>
 #include <tchar.h>
 #include "Browser/Window/Window.h"
 #include "document/renderer/DocumentRenderer.h"
@@ -10,6 +11,16 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 
 
 int WINAPI WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE previous, _In_ LPSTR CMDLine, _In_ int CMDShow) {
+    AllocConsole();
+    FILE* fDummy;
+    freopen_s(&fDummy, "CONIN$", "r", stdin);
+    freopen_s(&fDummy, "CONOUT$", "w", stderr);
+    freopen_s(&fDummy, "CONOUT$", "w", stdout);
+    system("cls");
+    std::cout << "\033[38;5;10m- Linked Browser Output to Console\033[0m\n" << std::endl;
+
+
+
     if(!Browser::Window::registerClass(instance, WndProc)) { // Registers Window(s) Class
         MessageBox(nullptr, _T("Failed to register class!"), Browser::errorWindowTitle, NULL);
         return 1;
