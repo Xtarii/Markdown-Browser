@@ -16,6 +16,11 @@ namespace Browser::Document {
     struct DocumentManager {
         private:
             /**
+             * Scroll Offset
+             */
+            int scroll = 0;
+
+            /**
              * Document Node Tree
              */
             std::vector<Parser::Node> nodeTree = std::vector<Parser::Node>();
@@ -27,6 +32,14 @@ namespace Browser::Document {
              * Creates Document Manager Instance
              */
             DocumentManager();
+
+            /**
+             * Applies Scroll Offset to Document
+             *
+             * @param scroll New Scroll
+             * @return Delta Scroll
+             */
+            int applyScroll(int scroll);
 
 
 
@@ -54,6 +67,13 @@ namespace Browser::Document {
              * @return Document
              */
             [[nodiscard]] std::vector<Parser::Node> getDocument() const { return nodeTree; }
+
+            /**
+             * Document Scroll Offset
+             *
+             * @return Scroll Offset
+             */
+            [[nodiscard]] int getScroll() const { return scroll; }
 
 
 

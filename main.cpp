@@ -1,9 +1,10 @@
 #include <iostream>
 #include <tchar.h>
 #include "Browser/Window/Window.h"
+#include "document/manager/DocumentManager.h"
 #include "document/renderer/DocumentRenderer.h"
 #include "style/Style.h"
-
+#include "style/fonts/Fonts.h"
 
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
@@ -69,6 +70,17 @@ LRESULT CALLBACK WndProc(HWND window, UINT message, WPARAM wParam, LPARAM lParam
                 UpdateWindow(window);
             }
             break;
+
+        // Application Key Inputs
+        case WM_MOUSEWHEEL: {
+            int zDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+            zDelta = zDelta / abs(zDelta) * BASE_TEXT_HEIGHT;
+            if(Browser::Document::DocsManager.applyScroll(zDelta) >= BASE_TEXT_HEIGHT) {
+                InvalidateRect(window, nullptr, true);
+                UpdateWindow(window); // Updates Window to show scroll
+            }
+            break;
+        }
 
 
 

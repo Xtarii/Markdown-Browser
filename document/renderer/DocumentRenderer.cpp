@@ -6,7 +6,7 @@
 
 
 void Browser::Document::Renderer::resetPosition() {
-    x = X_START; y = Y_START;
+    x = X_START; y = Y_START + DocsManager.getScroll();
 }
 
 

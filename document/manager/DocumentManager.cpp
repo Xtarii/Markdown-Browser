@@ -13,8 +13,18 @@ Browser::Document::DocumentManager::DocumentManager() {
 
 
 
+int Browser::Document::DocumentManager::applyScroll(const int scroll) {
+    const int bf = this->scroll;
+    this->scroll += scroll;
+    if(this->scroll > 0) this->scroll = 0;
+    return abs(bf - this->scroll); // Returns delta scroll
+}
+
+
+
 bool Browser::Document::DocumentManager::loadDocument(const char* document) {
     nodeTree = Parser::parseTree(document);
+    scroll = 0;
     return true; // Status return
 }
 
