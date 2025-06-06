@@ -20,6 +20,6 @@ Browser::Style::Fonts::Font::Font(int height, DWORD underline, DWORD italic, DWO
 
 
 Browser::Style::Fonts::Font::~Font() {
-    std::cout << "Font Cleanup:\n\033[38;5;9m - Deletes font\033[0m" << std::endl;
+    // std::cout << "Font Cleanup:\n\033[38;5;9m - Deletes font\033[0m" << std::endl;
     DeleteObject(object); // Cleanup of font
 }

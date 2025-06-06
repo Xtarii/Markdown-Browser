@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.30)
 project(Browser)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /showIncludes")
 
 
 
@@ -11,7 +10,7 @@ include(FetchContent)
 FetchContent_Declare(
         MDTP
         GIT_REPOSITORY https://github.com/Xtarii/MDTP.git
-        GIT_TAG v1.2
+        GIT_TAG v1.4
 )
 FetchContent_MakeAvailable(MDTP)
 
